@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  chat-app:
+    build: .
+    container_name: chat-app
+    ports:
+      - "3000:3000"
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    ports:
+      - "8080:8080"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+
+  nagios:
+    image: jasonrivers/nagios:latest
+    container_name: nagios
+    ports:
+      - "5000:80"
+    environment:
+      - NAGIOS_FQDN=localhost
+    volumes:
+      - nagios_data:/opt/nagios/etc
+      - nagios_var:/opt/nagios/var
+      - ./nagios/localhost.cfg:/opt/nagios/etc/localhost.cfg
+
+volumes:
+  jenkins_home:
+  nagios_data:
+  nagios_var: 
